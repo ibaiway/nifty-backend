@@ -1,5 +1,6 @@
-import app from './server';
+import app from './server.js';
+import config from './config/config.js';
 
-app.listen(3000, () => {
-  console.log(`Server running at http://localhost:3000`);
+app.listen(config.app.PORT, () => {
+  config.logger.info(`Server running at http://localhost:${config.app.PORT}`);
 });
