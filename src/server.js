@@ -3,6 +3,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors';
 import config from './config/config.js';
+import router from './routes/user.routes.js';
+
 
 const app = express();
 
@@ -14,5 +16,5 @@ app.use(
     origin: config.client.URL
   })
 );
-
+app.use(router);
 export default app;
