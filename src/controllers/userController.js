@@ -4,7 +4,7 @@ async function login(req, res, next) {
   const { uid, email } = req.user;
 
   try {
-    const user = await db.User.findOne({ '-id': uid }).lean().exec();
+    const user = await db.User.findOne({ _id: uid }).lean().exec();
 
     if (user) {
       res.status(200).send({
