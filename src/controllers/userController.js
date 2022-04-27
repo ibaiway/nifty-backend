@@ -73,7 +73,7 @@ async function signUp(req, res, next) {
       language,
       profileImage
     } = req.body;
-    const newUser = await new UserModel.create({
+    const newUser = await UserModel.create({
       _id: uid,
       email,
       firstName,
@@ -84,7 +84,7 @@ async function signUp(req, res, next) {
       language,
       profileImage
     });
-    res.sendStatus(201);
+    res.status(201).send({ data: newUser });
   } catch (error) {
     console.log(error);
     next(error);

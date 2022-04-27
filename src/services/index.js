@@ -1,5 +1,3 @@
 import auth from './auth/index.js';
 
-export default {
-  auth
-};
+export default auth;
