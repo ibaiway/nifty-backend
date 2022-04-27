@@ -3,7 +3,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors';
 import config from './config/config.js';
-import userRouter from './routes/userRoutes.js';
+import userRouter from './routes/user-routes.js';
 
 const app = express();
 

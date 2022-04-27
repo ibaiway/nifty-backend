@@ -5,7 +5,7 @@ async function login(req, res, next) {
 
   try {
     const user = await db.User.findOne({ _id: uid })
-      .select('-password -__v -createdAt -updatedAt')
+      .select('-__v -createdAt -updatedAt')
       .lean()
       .exec();
 
@@ -86,7 +86,7 @@ async function signUp(req, res, next) {
       artist,
       language,
       profileImage
-    });
+    }).select('-__v -createdAt -updatedAt');
     res.status(201).send({ data: newUser });
   } catch (error) {
     console.log(error);
