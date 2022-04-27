@@ -4,7 +4,10 @@ async function login(req, res, next) {
   const { uid, email } = req.user;
 
   try {
-    const user = await db.User.findOne({ _id: uid }).lean().exec();
+    const user = await db.User.findOne({ _id: uid })
+      .select('-password -__v -createdAt -updatedAt')
+      .lean()
+      .exec();
 
     if (user) {
       res.status(200).send({
@@ -62,7 +65,7 @@ async function signUp(req, res, next) {
     const { uid, email } = req.user;
     const user = await UserModel.findOne({ email: email });
     if (user) {
-      return res.sendStatus(200);
+      return res.status(200).send({ data: user });
     }
     const {
       firstName,
