@@ -1,5 +1,21 @@
 import UserModel from '../models/user-model.js';
 
+async function login(req, res, next) {
+  const { uid, email } = req.user;
+
+  try {
+    const user = await db.User.findOne({ '-id': uid }).lean().exec();
+
+    if (user) {
+      res.status(200).send({
+        data: user
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getUser(req, res, next) {
   try {
     const user = await UserModel.findById(req.params.id).lean().exec();
@@ -75,4 +91,4 @@ async function signUp(req, res, next) {
   }
 }
 
-export { getUser, editUser, signUp };
+export { getUser, editUser, signUp, login };
