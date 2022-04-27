@@ -13,6 +13,6 @@ userRouter.use('/account', authMiddleware);
 userRouter.get('/account/:id', getUser);
 userRouter.put('/account/:id', editUser);
 userRouter.post('/account/signup', signUp);
-userRouter.get('/account/login', login);
+userRouter.post('/account/login', login);
 
 export default userRouter;

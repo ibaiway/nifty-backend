@@ -2,13 +2,11 @@ import UserModel from '../models/user-model.js';
 
 async function login(req, res, next) {
   const { uid, email } = req.user;
-
   try {
-    const user = await db.User.findOne({ _id: uid })
+    const user = await UserModel.findOne({ _id: uid })
       .select('-__v -createdAt -updatedAt')
       .lean()
       .exec();
-
     if (user) {
       res.status(200).send({
         data: user
@@ -86,7 +84,7 @@ async function signUp(req, res, next) {
       artist,
       language,
       profileImage
-    }).select('-__v -createdAt -updatedAt');
+    });
     res.status(201).send({ data: newUser });
   } catch (error) {
     console.log(error);
