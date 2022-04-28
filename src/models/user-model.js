@@ -35,7 +35,8 @@ const UserSchema = new mongoose.Schema(
     },
     language: {
       type: String,
-      default: 'en'
+      default: 'en',
+      maxlength: 2
     },
     profileImage: {
       type: String
