@@ -3,7 +3,8 @@ import {
   getUser,
   editUser,
   signUp,
-  login
+  login,
+  signUpWithProvider
 } from '../controllers/user-controller.js';
 import authMiddleware from '../middlewares/auth-middleware.js';
 
@@ -13,6 +14,7 @@ userRouter.use('/account', authMiddleware);
 userRouter.get('/account/:id', getUser);
 userRouter.put('/account/:id', editUser);
 userRouter.post('/account/signup', signUp);
+userRouter.post('/account/signupwithprovider', signUpWithProvider);
 userRouter.post('/account/login', login);
 
 export default userRouter;

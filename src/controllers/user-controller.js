@@ -65,25 +65,13 @@ async function signUp(req, res, next) {
     if (user) {
       return res.status(200).send({ data: user });
     }
-    const {
-      firstName,
-      lastName,
-      following,
-      followedBy,
-      artist,
-      language,
-      profileImage
-    } = req.body;
+    const { firstName, lastName, language } = req.body;
     const newUser = await UserModel.create({
       _id: uid,
       email,
       firstName,
       lastName,
-      following,
-      followedBy,
-      artist,
-      language,
-      profileImage
+      language
     });
     res.status(201).send({ data: newUser });
   } catch (error) {
@@ -92,4 +80,25 @@ async function signUp(req, res, next) {
   }
 }
 
-export { getUser, editUser, signUp, login };
+async function signUpWithProvider(req, res, next) {
+  try {
+    const { uid, email } = req.user;
+    const user = await UserModel.findOne({ email: email });
+    if (user) {
+      return res.status(200).send({ data: user });
+    }
+    const { firstName, language } = req.body;
+    const newUser = await UserModel.create({
+      _id: uid,
+      email,
+      firstName,
+      language
+    });
+    res.status(201).send({ data: newUser });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+export { getUser, editUser, signUp, signUpWithProvider, login };
