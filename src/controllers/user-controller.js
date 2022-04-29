@@ -1,7 +1,7 @@
 import UserModel from '../models/user-model.js';
 
-async function login(req, res, next) {
-  const { uid, email } = req.user;
+async function getCurrentUser(req, res, next) {
+  const { uid } = req.user;
   try {
     const user = await UserModel.findOne({ _id: uid })
       .select('-__v -createdAt -updatedAt')
@@ -19,7 +19,10 @@ async function login(req, res, next) {
 
 async function getUser(req, res, next) {
   try {
-    const user = await UserModel.findById(req.params.id).lean().exec();
+    const user = await UserModel.findById(req.params.id)
+      .select('-__v -createdAt -updatedAt')
+      .lean()
+      .exec();
     res.status(200).send({
       data: user
     });
@@ -116,4 +119,4 @@ async function signUpWithProvider(req, res, next) {
   }
 }
 
-export { getUser, updateUser, signUp, signUpWithProvider, login };
+export { getUser, updateUser, signUp, signUpWithProvider, getCurrentUser };
