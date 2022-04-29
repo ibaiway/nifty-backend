@@ -1,5 +1,7 @@
-import UserModel from "./user-model.js";
+import UserModel from './user-model.js';
+import TrackModel from './track-model.js';
 
 export default {
-    User: UserModel
-}
+  User: UserModel,
+  Track: TrackModel
+};
