@@ -24,36 +24,53 @@ async function getUser(req, res, next) {
       data: user
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
 
-async function editUser(req, res, next) {
+async function updateUser(req, res, next) {
+  const { id } = req.params;
+  const {
+    email,
+    firstName,
+    lastName,
+    following,
+    followedBy,
+    artist,
+    language,
+    profileImage
+  } = req.body;
+
   try {
-    const {
-      email,
-      firstName,
-      lastName,
-      following,
-      followedBy,
-      artist,
-      language,
-      profileImage
-    } = req.body;
-    await UserModel.findByIdAndUpdate(req.params.id, {
-      email,
-      firstName,
-      lastName,
-      following,
-      followedBy,
-      artist,
-      language,
-      profileImage
+    const updatedUser = await UserModel.findOneAndUpdate(
+      {
+        _id: id
+      },
+      {
+        $set: {
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          following: following,
+          followedBy: followedBy,
+          artist: artist,
+          language: language,
+          profileImage: profileImage
+        }
+      },
+      {
+        new: true
+      }
+    ).select({
+      email: 1,
+      firstName: 1,
+      lastName: 1
     });
-    res.json({ message: 'User edited' });
+
+    res.status(200).send({
+      data: updatedUser
+    });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
@@ -75,7 +92,6 @@ async function signUp(req, res, next) {
     });
     res.status(201).send({ data: newUser });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
@@ -96,9 +112,8 @@ async function signUpWithProvider(req, res, next) {
     });
     res.status(201).send({ data: newUser });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
 
-export { getUser, editUser, signUp, signUpWithProvider, login };
+export { getUser, updateUser, signUp, signUpWithProvider, login };

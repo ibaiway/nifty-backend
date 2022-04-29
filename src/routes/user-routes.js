@@ -1,7 +1,7 @@
 import Router from 'express';
 import {
   getUser,
-  editUser,
+  updateUser,
   signUp,
   login,
   signUpWithProvider
@@ -12,7 +12,7 @@ const userRouter = Router();
 
 userRouter.use('/account', authMiddleware);
 userRouter.get('/account/:id', getUser);
-userRouter.put('/account/:id', editUser);
+userRouter.put('/account/:id', updateUser);
 userRouter.post('/account/signup', signUp);
 userRouter.post('/account/signupwithprovider', signUpWithProvider);
 userRouter.post('/account/login', login);
