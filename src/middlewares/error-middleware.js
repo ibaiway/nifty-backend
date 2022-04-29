@@ -1,7 +1,7 @@
-import logger from '../config/config.js';
+import config from '../config/config.js';
 
 async function errorMiddleware(err, req, res, next) {
-  logger.error(err);
+  config.logger.error(err);
 
   if (req.headersSent) {
     // When you add a custom error handler,
