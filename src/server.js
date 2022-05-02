@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import config from './config/config.js';
 import userRouter from './routes/user-routes.js';
+import trackRouter from './routes/track-routes.js';
 import errorMiddleware from './middlewares/error-middleware.js';
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(
 );
 
 app.use(userRouter);
+app.use(trackRouter);
 
 app.use(errorMiddleware);
 

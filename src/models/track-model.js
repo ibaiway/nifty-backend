@@ -19,21 +19,21 @@ const TrackSchema = new mongoose.Schema(
     thumbnail: {
       type: String
     },
-    public: {
+    active: {
       type: Boolean,
       default: true
     },
     userId: {
-      type: mongoose.SchemaType.ObjectId,
+      type: mongoose.ObjectId,
       required: [true, 'The userid is required'],
       ref: 'user'
     },
-    featuring: [{ type: mongoose.SchemaType.ObjectId, ref: 'user' }],
+    featuring: [{ type: mongoose.ObjectId, ref: 'user' }],
     genre: {
-      type: mongoose.SchemaType.ObjectId
+      type: mongoose.ObjectId
     },
     likedBy: {
-      type: [{ type: mongoose.SchemaType.ObjectId, ref: 'user' }],
+      type: [{ type: mongoose.ObjectId, ref: 'user' }],
       default: []
     }
   },

@@ -1,15 +1,19 @@
 import Router from 'express';
-import { getTracks } from '../controllers/track-controller.js';
-import authMiddleware from '../middlewares/auth-middleware.js';
+import {
+  getTracks,
+  createTrack,
+  updateTrack,
+  getTrackById,
+  deleteTrackById,
+  likeTrackById
+} from '../controllers/track-controller.js';
 
-const userRouter = Router();
+const trackRouter = Router();
 
-userRouter.get('/track', getTracks);
-userRouter.post('/track', createTrack);
-userRouter.put('/track', updateTrack);
-userRouter.get('/track', getTrackById);
-userRouter.delete('/track', deleteTrackById);
-userRouter.get('/track/like', checkIfUserLiked);
-userRouter.put('/track/like', likeTrackById);
-userRouter.put('/track/play', playTrackById);
-export default userRouter;
+trackRouter.get('/track', getTracks);
+trackRouter.post('/track', createTrack);
+trackRouter.put('/track', updateTrack);
+trackRouter.get('/track', getTrackById);
+trackRouter.delete('/track', deleteTrackById);
+trackRouter.put('/track/like', likeTrackById);
+export default trackRouter;
