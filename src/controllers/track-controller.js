@@ -125,11 +125,24 @@ async function likeTrackById(res, req, next) {
   }
 }
 
+async function checkIfUserLiked(res, req, next) {
+  const { id } = req.params;
+  const { uid } = req.user;
+  try {
+    const track = await TrackModel.find({ id: id });
+    const isLiked = track.likedBy.includes(uid);
+    res.status(200).send({ data: isLiked });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   getTracks,
   createTrack,
   updateTrack,
   getTrackById,
   deleteTrackById,
-  likeTrackById
+  likeTrackById,
+  checkIfUserLiked
 };
