@@ -142,7 +142,6 @@ describe('mongoose schemas', () => {
           language: 'english'
         });
       } catch (error) {
-        console.log(error.errors.language.properties.message);
         expect(error.errors.language.properties.message).toMatch(
           'Path `language` (`english`) is longer than the maximum allowed length (2)'
         );

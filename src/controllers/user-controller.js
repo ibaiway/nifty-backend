@@ -43,7 +43,7 @@ async function updateUser(req, res, next) {
     language,
     profileImage
   } = req.body;
-
+  console.log(req.body);
   try {
     const updatedUser = await UserModel.findOneAndUpdate(
       {
