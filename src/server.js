@@ -6,6 +6,7 @@ import config from './config/config.js';
 import userRouter from './routes/user-routes.js';
 import trackRouter from './routes/track-routes.js';
 import errorMiddleware from './middlewares/error-middleware.js';
+import genreRouter from './routes/genre-route.js';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(
 
 app.use(userRouter);
 app.use(trackRouter);
+app.use(genreRouter);
 
 app.use(errorMiddleware);
 

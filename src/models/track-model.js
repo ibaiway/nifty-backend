@@ -24,16 +24,16 @@ const TrackSchema = new mongoose.Schema(
       default: true
     },
     userId: {
-      type: mongoose.ObjectId,
+      type: String,
       required: [true, 'The userid is required'],
       ref: 'user'
     },
-    featuring: [{ type: mongoose.ObjectId, ref: 'user' }],
+    featuring: [{ type: String, ref: 'user' }],
     genre: {
       type: mongoose.ObjectId
     },
     likedBy: {
-      type: [{ type: mongoose.ObjectId, ref: 'user' }],
+      type: [{ type: String, ref: 'user' }],
       default: []
     }
   },

@@ -3,7 +3,7 @@ import UserModel from '../models/user-model.js';
 async function getCurrentUser(req, res, next) {
   const { uid } = req.user;
   try {
-    const user = await UserModel.findOne({ _id: uid })
+    const user = await UserModel.findById({ _id: uid })
       .select('-__v -createdAt -updatedAt')
       .lean()
       .exec();

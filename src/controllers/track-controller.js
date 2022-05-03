@@ -1,6 +1,6 @@
 import TrackModel from '../models/track-model.js';
 
-async function getTracks(res, req, next) {
+async function getTracks(req, res, next) {
   try {
     const tracks = await TrackModel.find({})
       .select('-__v -createdAt -updatedAt')
@@ -35,7 +35,7 @@ async function createTrack(req, res, next) {
   }
 }
 
-async function updateTrack(res, req, next) {
+async function updateTrack(req, res, next) {
   const { id } = req.params;
   const { title, genre, url, duration, thumbnail, active, featuring, likedBy } =
     req.body;
@@ -73,10 +73,10 @@ async function updateTrack(res, req, next) {
   }
 }
 
-async function getTrackById(res, req, next) {
+async function getTrackById(req, res, next) {
   const { id } = req.params;
   try {
-    const track = await TrackModel.findOne({ id })
+    const track = await TrackModel.findById(id)
       .select('-__v -createdAt -updatedAt')
       .lean()
       .exec();
@@ -94,44 +94,44 @@ async function getTrackById(res, req, next) {
   }
 }
 
-async function deleteTrackById(res, req, next) {
+async function deleteTrackById(req, res, next) {
   const { id } = req.params;
   try {
-    const track = await TrackModel.deleteById({ id });
-    res.status(200);
+    const track = await TrackModel.deleteOne({ _id: id });
+    if (track !== null) {
+      res.status(200).send({
+        message: 'Track deleted'
+      });
+    } else {
+      res.status(404).send({
+        error: 'Track not found'
+      });
+    }
   } catch (error) {
     next(error);
   }
 }
 
-async function likeTrackById(res, req, next) {
+async function likeTrackById(req, res, next) {
   const { id } = req.params;
   const { uid } = req.user;
+  console.log(uid);
 
   try {
-    const newLikes = await TrackModel.updateOne(
-      { id: id },
+    const newLikes = await TrackModel.findOneAndUpdate(
+      { _id: id },
       {
-        $push: {
+        $addToSet: {
           likedBy: uid
         }
+      },
+      {
+        new: true
       }
     );
     res.status(200).send({
       data: newLikes
     });
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function checkIfUserLiked(res, req, next) {
-  const { id } = req.params;
-  const { uid } = req.user;
-  try {
-    const track = await TrackModel.find({ id: id });
-    const isLiked = track.likedBy.includes(uid);
-    res.status(200).send({ data: isLiked });
   } catch (error) {
     next(error);
   }
@@ -143,6 +143,5 @@ export {
   updateTrack,
   getTrackById,
   deleteTrackById,
-  likeTrackById,
-  checkIfUserLiked
+  likeTrackById
 };
