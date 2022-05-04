@@ -30,7 +30,8 @@ const TrackSchema = new mongoose.Schema(
     },
     featuring: [{ type: String, ref: 'user' }],
     genre: {
-      type: mongoose.ObjectId
+      type: mongoose.ObjectId,
+      ref: 'genre'
     },
     likedBy: {
       type: [{ type: String, ref: 'user' }],
@@ -39,6 +40,8 @@ const TrackSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+TrackSchema.index({ title: 'text' });
 
 const TrackModel = new mongoose.model('track', TrackSchema);
 
