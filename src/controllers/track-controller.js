@@ -115,7 +115,6 @@ async function deleteTrackById(req, res, next) {
 async function likeTrackById(req, res, next) {
   const { id } = req.params;
   const { uid } = req.user;
-  console.log(uid);
 
   try {
     const newLikes = await TrackModel.findOneAndUpdate(

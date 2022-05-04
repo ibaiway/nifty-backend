@@ -11,6 +11,10 @@ async function getCurrentUser(req, res, next) {
       res.status(200).send({
         data: user
       });
+    } else {
+      res.status(404).send({
+        error: 'User not found'
+      });
     }
   } catch (error) {
     next(error);
@@ -18,14 +22,22 @@ async function getCurrentUser(req, res, next) {
 }
 
 async function getUser(req, res, next) {
+  const { id } = req.params;
   try {
-    const user = await UserModel.findById(req.params.id)
+    const user = await UserModel.findById(id)
       .select('-__v -createdAt -updatedAt')
       .lean()
       .exec();
-    res.status(200).send({
-      data: user
-    });
+
+    if (user) {
+      res.status(200).send({
+        data: user
+      });
+    } else {
+      res.status(404).send({
+        error: 'User not found'
+      });
+    }
   } catch (error) {
     next(error);
   }
@@ -43,7 +55,6 @@ async function updateUser(req, res, next) {
     language,
     profileImage
   } = req.body;
-  console.log(req.body);
   try {
     const updatedUser = await UserModel.findOneAndUpdate(
       {
@@ -69,10 +80,15 @@ async function updateUser(req, res, next) {
       firstName: 1,
       lastName: 1
     });
-
-    res.status(200).send({
-      data: updatedUser
-    });
+    if (updatedUser) {
+      res.status(200).send({
+        data: updatedUser
+      });
+    } else {
+      res.status(404).send({
+        error: 'User not found'
+      });
+    }
   } catch (error) {
     next(error);
   }

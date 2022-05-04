@@ -27,8 +27,8 @@ const UserSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 30
     },
-    following: [{ type: mongoose.ObjectId, ref: 'User' }],
-    followedBy: [{ type: mongoose.ObjectId, ref: 'User' }],
+    following: [{ type: String, ref: 'User' }],
+    followedBy: [{ type: String, ref: 'User' }],
     artist: {
       type: Boolean,
       default: false

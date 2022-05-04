@@ -19,13 +19,9 @@ async function getTrackByGenre(req, res, next) {
   const { id } = req.params;
   try {
     const TrackWithGenre = await TrackModel.find({ genre: id });
-    if (TrackWithGenre !== null) {
+    if (TrackWithGenre) {
       res.status(200).send({
         data: TrackWithGenre
-      });
-    } else {
-      res.status(200).send({
-        data: 'Genre does not exists'
       });
     }
   } catch (error) {
