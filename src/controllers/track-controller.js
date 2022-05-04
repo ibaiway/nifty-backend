@@ -96,8 +96,9 @@ async function getTrackById(req, res, next) {
 
 async function deleteTrackById(req, res, next) {
   const { id } = req.params;
+  const { uid } = req.user;
   try {
-    const track = await TrackModel.deleteOne({ _id: id });
+    const track = await TrackModel.deleteOne({ _id: id, userId: uid });
     if (track !== null) {
       res.status(200).send({
         message: 'Track deleted'
@@ -115,7 +116,6 @@ async function deleteTrackById(req, res, next) {
 async function likeTrackById(req, res, next) {
   const { id } = req.params;
   const { uid } = req.user;
-  console.log(uid);
 
   try {
     const newLikes = await TrackModel.findOneAndUpdate(
@@ -137,11 +137,36 @@ async function likeTrackById(req, res, next) {
   }
 }
 
+async function unlikeTrackById(req, res, next) {
+  const { id } = req.params;
+  const { uid } = req.user;
+
+  try {
+    const unLiked = await TrackModel.findOneAndUpdate(
+      { _id: id },
+      {
+        $pull: {
+          likedBy: uid
+        }
+      },
+      {
+        new: true
+      }
+    );
+    res.status(200).send({
+      data: unLiked
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   getTracks,
   createTrack,
   updateTrack,
   getTrackById,
   deleteTrackById,
-  likeTrackById
+  likeTrackById,
+  unlikeTrackById
 };
