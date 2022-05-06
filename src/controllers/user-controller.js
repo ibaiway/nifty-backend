@@ -78,7 +78,9 @@ async function updateUser(req, res, next) {
     ).select({
       email: 1,
       firstName: 1,
-      lastName: 1
+      lastName: 1,
+      profileImage: 1,
+      artist: 1
     });
     if (updatedUser) {
       res.status(200).send({
