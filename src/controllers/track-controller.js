@@ -1,12 +1,24 @@
 import TrackModel from '../models/track-model.js';
 
 async function getTracks(req, res, next) {
+  const { uid } = req.user;
   try {
-    const tracks = await TrackModel.find({})
-      .populate('genre')
-      .select('-__v -createdAt -updatedAt')
-      .lean()
-      .exec();
+    const tracks = await TrackModel.aggregate([
+      {
+        $addFields: {
+          isLiked: {
+            $cond: {
+              if: { $in: [uid, '$likedBy'] },
+              then: true,
+              else: false
+            }
+          }
+        }
+      },
+      {
+        $unset: 'likedBy'
+      }
+    ]);
     res.status(200).send({
       data: tracks
     });
