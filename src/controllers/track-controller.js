@@ -3,6 +3,7 @@ import TrackModel from '../models/track-model.js';
 async function getTracks(req, res, next) {
   try {
     const tracks = await TrackModel.find({})
+      .populate('genre')
       .select('-__v -createdAt -updatedAt')
       .lean()
       .exec();
@@ -77,6 +78,7 @@ async function getTrackById(req, res, next) {
   const { id } = req.params;
   try {
     const track = await TrackModel.findById(id)
+      .populate('genre')
       .select('-__v -createdAt -updatedAt')
       .lean()
       .exec();
