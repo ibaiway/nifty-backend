@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": "16.13.1"
+  },
   "scripts": {
     "dev": "nodemon src/index.js",
-    "test": "jest --watch",
+    "test": "jest --config jest.config.js --watchAll",
     "coverage": "npm run test -- --coverage",
     "precommit": "lint-staged"
   },
