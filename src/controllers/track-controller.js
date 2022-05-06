@@ -163,6 +163,24 @@ async function unlikeTrackById(req, res, next) {
   }
 }
 
+async function getlikedTracks(req, res, next) {
+  const { uid } = req.user;
+  try {
+    const tracks = await TrackModel.find({
+      likedBy: uid
+    })
+      .populate('genre')
+      .select('-__v -createdAt -updatedAt')
+      .lean()
+      .exec();
+    res.status(200).send({
+      data: tracks
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   getTracks,
   createTrack,
@@ -170,5 +188,6 @@ export {
   getTrackById,
   deleteTrackById,
   likeTrackById,
-  unlikeTrackById
+  unlikeTrackById,
+  getlikedTracks
 };
