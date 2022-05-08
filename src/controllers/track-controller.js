@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import TrackModel from '../models/track-model.js';
 
 async function getTracks(req, res, next) {
@@ -16,7 +17,18 @@ async function getTracks(req, res, next) {
         }
       },
       {
-        $unset: 'likedBy'
+        $unset: ['likedBy', '__v', 'createdAt', 'updatedAt']
+      },
+      {
+        $lookup: {
+          from: 'genres',
+          localField: 'genre',
+          foreignField: '_id',
+          as: 'genre'
+        }
+      },
+      {
+        $unwind: '$genre'
       }
     ]);
     res.status(200).send({
@@ -87,13 +99,40 @@ async function updateTrack(req, res, next) {
 }
 
 async function getTrackById(req, res, next) {
+  const { uid } = req.user;
   const { id } = req.params;
+  const parsedId = mongoose.Types.ObjectId(id);
   try {
-    const track = await TrackModel.findById(id)
-      .populate('genre')
-      .select('-__v -createdAt -updatedAt')
-      .lean()
-      .exec();
+    const track = await await TrackModel.aggregate([
+      {
+        $match: { _id: parsedId }
+      },
+      {
+        $addFields: {
+          isLiked: {
+            $cond: {
+              if: { $in: [uid, '$likedBy'] },
+              then: true,
+              else: false
+            }
+          }
+        }
+      },
+      {
+        $unset: ['likedBy', '__v', 'createdAt', 'updatedAt']
+      },
+      {
+        $lookup: {
+          from: 'genres',
+          localField: 'genre',
+          foreignField: '_id',
+          as: 'genre'
+        }
+      },
+      {
+        $unwind: '$genre'
+      }
+    ]);
     if (track) {
       res.status(200).send({
         data: track
@@ -178,13 +217,30 @@ async function unlikeTrackById(req, res, next) {
 async function getlikedTracks(req, res, next) {
   const { uid } = req.user;
   try {
-    const tracks = await TrackModel.find({
-      likedBy: uid
-    })
-      .populate('genre')
-      .select('-__v -createdAt -updatedAt')
-      .lean()
-      .exec();
+    const tracks = await TrackModel.aggregate([
+      {
+        $match: { likedBy: uid }
+      },
+      {
+        $addFields: {
+          isLiked: true
+        }
+      },
+      {
+        $unset: ['likedBy', '__v', 'createdAt', 'updatedAt']
+      },
+      {
+        $lookup: {
+          from: 'genres',
+          localField: 'genre',
+          foreignField: '_id',
+          as: 'genre'
+        }
+      },
+      {
+        $unwind: '$genre'
+      }
+    ]);
     res.status(200).send({
       data: tracks
     });
