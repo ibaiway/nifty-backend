@@ -13,7 +13,7 @@ const userRouter = Router();
 userRouter.use('/account', authMiddleware);
 userRouter.get('/account', getCurrentUser);
 userRouter.get('/account/:id', getUser);
-userRouter.put('/account/:id', updateUser);
+userRouter.put('/account', updateUser);
 userRouter.post('/account/signup', signUp);
 userRouter.post('/account/signupwithprovider', signUpWithProvider);
 

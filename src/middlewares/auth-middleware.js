@@ -1,4 +1,4 @@
-import auth from '../services/index.js';
+import { auth } from '../services/index.js';
 import config from '../config/config.js';
 
 async function authMiddleware(req, res, next) {

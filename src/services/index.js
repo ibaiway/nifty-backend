@@ -1,3 +1,4 @@
 import auth from './auth/index.js';
+import * as userService from './user-service.js';
 
-export default auth;
+export { auth, userService };
