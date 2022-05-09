@@ -7,6 +7,7 @@ export default {
       lines: 20
     }
   },
+  verbose: true,
   moduleFileExtensions: ['js', 'mjs'],
   transform: {
     '^.+\\.js$': 'babel-jest',

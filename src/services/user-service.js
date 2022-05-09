@@ -30,25 +30,29 @@ async function signUp(userInfo) {
 }
 
 async function update(user) {
-  const { id, ...userDetails } = user;
-  const updatedUser = await UserModel.findOneAndUpdate(
-    { _id: id },
-    {
-      $set: {
-        ...userDetails
+  try {
+    const { id, ...userDetails } = user;
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          ...userDetails
+        }
+      },
+      {
+        new: true
       }
-    },
-    {
-      new: true
-    }
-  ).select({
-    email: 1,
-    firstName: 1,
-    lastName: 1,
-    profileImage: 1,
-    artist: 1
-  });
-  return updatedUser;
+    ).select({
+      email: 1,
+      firstName: 1,
+      lastName: 1,
+      profileImage: 1,
+      artist: 1
+    });
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export { signUp, findById, update };
