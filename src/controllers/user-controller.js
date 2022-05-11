@@ -42,7 +42,7 @@ async function updateUser(req, res, next) {
   const { uid } = req.user;
 
   try {
-    const updatedUser = userService.update({ ...req.body, id: uid });
+    const updatedUser = await userService.update({ ...req.body, id: uid });
     if (updatedUser) {
       res.status(200).send({
         data: updatedUser
