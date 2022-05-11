@@ -7,7 +7,8 @@ import {
   deleteTrackById,
   likeTrackById,
   unlikeTrackById,
-  getlikedTracks
+  getlikedTracks,
+  getCurrentUserTracks
 } from '../controllers/track-controller.js';
 import authMiddleware from '../middlewares/auth-middleware.js';
 
@@ -17,6 +18,7 @@ trackRouter.use('/track', authMiddleware);
 trackRouter.get('/track', getTracks);
 trackRouter.post('/track', createTrack);
 trackRouter.get('/track/getliked', getlikedTracks);
+trackRouter.get('/track/byartist', getCurrentUserTracks);
 trackRouter.put('/track/:id', updateTrack);
 trackRouter.get('/track/:id', getTrackById);
 trackRouter.delete('/track/:id', deleteTrackById);

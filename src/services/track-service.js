@@ -93,6 +93,46 @@ async function getTracksByIdAggregate(uid, id) {
   }
 }
 
+async function getTracksByArtist(uid) {
+  try {
+    const track = await TrackModel.aggregate([
+      {
+        $match: { userId: uid }
+      },
+      {
+        $addFields: {
+          isLiked: {
+            $cond: {
+              if: { $in: [uid, '$likedBy'] },
+              then: true,
+              else: false
+            }
+          }
+        }
+      },
+      {
+        $lookup: lookupGenre()
+      },
+      {
+        $lookup: lookupUser()
+      },
+      {
+        $unwind: '$genre'
+      },
+      {
+        $unwind: '$artist'
+      },
+      {
+        $project: fieldsToProject()
+      }
+    ]);
+
+    return track;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getLikedTracksAgreggate(uid) {
   try {
     const tracks = await TrackModel.aggregate([
@@ -192,6 +232,7 @@ async function deleteTrackById(uid, id) {
 export {
   getTracksAggregate,
   getTracksByIdAggregate,
+  getTracksByArtist,
   getLikedTracksAgreggate,
   likeTrackById,
   unlikeTrackById,
