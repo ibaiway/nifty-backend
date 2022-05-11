@@ -1,36 +1,10 @@
 import mongoose from 'mongoose';
-import TrackModel from '../models/track-model.js';
+import { trackService } from '../services/index.js';
 
 async function getTracks(req, res, next) {
   const { uid } = req.user;
   try {
-    const tracks = await TrackModel.aggregate([
-      {
-        $addFields: {
-          isLiked: {
-            $cond: {
-              if: { $in: [uid, '$likedBy'] },
-              then: true,
-              else: false
-            }
-          }
-        }
-      },
-      {
-        $unset: ['likedBy', '__v', 'createdAt', 'updatedAt']
-      },
-      {
-        $lookup: {
-          from: 'genres',
-          localField: 'genre',
-          foreignField: '_id',
-          as: 'genre'
-        }
-      },
-      {
-        $unwind: '$genre'
-      }
-    ]);
+    const tracks = await trackService.getTracksAggregate(uid);
     res.status(200).send({
       data: tracks
     });
@@ -42,57 +16,37 @@ async function getTracks(req, res, next) {
 async function createTrack(req, res, next) {
   try {
     const { uid } = req.user;
-    const { url, duration, thumbnail, title, featuring, genre, active } =
-      req.body;
-    const newTrack = await TrackModel.create({
-      userId: uid,
-      title,
-      url,
-      duration,
-      thumbnail,
-      featuring,
-      genre,
-      active
-    });
+    const userInfo = { ...req.body };
+    const newTrack = await trackService.createTrack(uid, userInfo);
+
     res.status(201).send({ data: newTrack });
   } catch (error) {
-    next(error);
+    if (error instanceof mongoose.Error) {
+      res.status(400).send({
+        error: `Values are not correct`
+      });
+    } else {
+      next(error);
+    }
   }
 }
 
 async function updateTrack(req, res, next) {
   const { id } = req.params;
-  const { title, genre, url, duration, thumbnail, active, featuring, likedBy } =
-    req.body;
+  const userInfo = { ...req.body };
 
   try {
-    const updatedTrack = await TrackModel.findOneAndUpdate(
-      {
-        _id: id
-      },
-      {
-        $set: {
-          title: title,
-          url: url,
-          duration: duration,
-          thumbnail: thumbnail,
-          active: active,
-          featuring: featuring,
-          likedBy: likedBy,
-          genre: genre
-        }
-      },
-      {
-        new: true
-      }
-    ).select({
-      title: 1,
-      url: 1
-    });
+    const track = await trackService.updateTrack(uid, userInfo);
 
-    res.status(200).send({
-      data: updatedTrack
-    });
+    if (track) {
+      res.status(200).send({
+        message: `Track ${id} updated`
+      });
+    } else {
+      res.status(404).send({
+        error: 'Track not found'
+      });
+    }
   } catch (error) {
     next(error);
   }
@@ -101,38 +55,8 @@ async function updateTrack(req, res, next) {
 async function getTrackById(req, res, next) {
   const { uid } = req.user;
   const { id } = req.params;
-  const parsedId = mongoose.Types.ObjectId(id);
   try {
-    const track = await await TrackModel.aggregate([
-      {
-        $match: { _id: parsedId }
-      },
-      {
-        $addFields: {
-          isLiked: {
-            $cond: {
-              if: { $in: [uid, '$likedBy'] },
-              then: true,
-              else: false
-            }
-          }
-        }
-      },
-      {
-        $unset: ['likedBy', '__v', 'createdAt', 'updatedAt']
-      },
-      {
-        $lookup: {
-          from: 'genres',
-          localField: 'genre',
-          foreignField: '_id',
-          as: 'genre'
-        }
-      },
-      {
-        $unwind: '$genre'
-      }
-    ]);
+    const track = await trackService.getTracksByIdAggregate(uid, id);
     if (track) {
       res.status(200).send({
         data: track
@@ -151,14 +75,14 @@ async function deleteTrackById(req, res, next) {
   const { id } = req.params;
   const { uid } = req.user;
   try {
-    const track = await TrackModel.deleteOne({ _id: id, userId: uid });
-    if (track !== null) {
+    const track = await trackService.deleteTrackById(uid, id);
+    if (track) {
       res.status(200).send({
         message: 'Track deleted'
       });
     } else {
       res.status(404).send({
-        error: 'Track not found'
+        error: `Track ${id} not found`
       });
     }
   } catch (error) {
@@ -171,22 +95,24 @@ async function likeTrackById(req, res, next) {
   const { uid } = req.user;
 
   try {
-    const newLikes = await TrackModel.findOneAndUpdate(
-      { _id: id },
-      {
-        $addToSet: {
-          likedBy: uid
-        }
-      },
-      {
-        new: true
-      }
-    );
-    res.status(200).send({
-      data: newLikes
-    });
+    const newLikes = await trackService.likeTrackById(uid, id);
+    if (newLikes) {
+      res.status(200).send({
+        message: `Track ${id} liked`
+      });
+    } else {
+      res.status(404).send({
+        error: `Track ${id} not found`
+      });
+    }
   } catch (error) {
-    next(error);
+    if (error instanceof mongoose.CastError) {
+      res.status(400).send({
+        error: `Track id: ${id} format not valid`
+      });
+    } else {
+      next(error);
+    }
   }
 }
 
@@ -195,52 +121,31 @@ async function unlikeTrackById(req, res, next) {
   const { uid } = req.user;
 
   try {
-    const unLiked = await TrackModel.findOneAndUpdate(
-      { _id: id },
-      {
-        $pull: {
-          likedBy: uid
-        }
-      },
-      {
-        new: true
-      }
-    );
-    res.status(200).send({
-      data: unLiked
-    });
+    const unLiked = await trackService.unlikeTrackById(uid, id);
+    if (unLiked) {
+      res.status(200).send({
+        message: `Track ${id} unliked`
+      });
+    } else {
+      res.status(404).send({
+        error: `Track ${id} not found`
+      });
+    }
   } catch (error) {
-    next(error);
+    if (error instanceof mongoose.CastError) {
+      res.status(400).send({
+        error: `Track id: ${id} format not valid`
+      });
+    } else {
+      next(error);
+    }
   }
 }
 
 async function getlikedTracks(req, res, next) {
   const { uid } = req.user;
   try {
-    const tracks = await TrackModel.aggregate([
-      {
-        $match: { likedBy: uid }
-      },
-      {
-        $addFields: {
-          isLiked: true
-        }
-      },
-      {
-        $unset: ['likedBy', '__v', 'createdAt', 'updatedAt']
-      },
-      {
-        $lookup: {
-          from: 'genres',
-          localField: 'genre',
-          foreignField: '_id',
-          as: 'genre'
-        }
-      },
-      {
-        $unwind: '$genre'
-      }
-    ]);
+    const tracks = await trackService.getLikedTracksAgreggate(uid);
     res.status(200).send({
       data: tracks
     });
