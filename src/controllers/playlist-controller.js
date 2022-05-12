@@ -1,4 +1,5 @@
 import PlaylistModel from '../models/playlist-model.js';
+import { playlistService } from '../services/index.js';
 
 async function showPlaylists(req, res, next) {
   try {
@@ -166,6 +167,30 @@ async function unfollowPlaylistById(req, res, next) {
   }
 }
 
+async function getPlaylistByCurrentUser(req, res, next) {
+  const { uid } = req.user;
+  try {
+    const playlists = await playlistService.getPlaylistByUser(uid, true);
+    res.status(200).send({
+      data: playlists
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getPlaylistByUser(req, res, next) {
+  const { id } = req.params;
+  try {
+    const playlists = await playlistService.getPlaylistByUser(id, false);
+    res.status(200).send({
+      data: playlists
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   showPlaylists,
   createPlaylist,
@@ -174,5 +199,7 @@ export {
   deletePlaylist,
   checkIfUserFollows,
   followPlaylistById,
-  unfollowPlaylistById
+  unfollowPlaylistById,
+  getPlaylistByCurrentUser,
+  getPlaylistByUser
 };
