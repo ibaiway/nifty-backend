@@ -77,4 +77,20 @@ async function signUpWithProvider(req, res, next) {
   }
 }
 
-export { getUser, updateUser, signUp, signUpWithProvider, getCurrentUser };
+async function getArtists(req, res, next) {
+  try {
+    const artists = await userService.getUsers(true);
+    res.status(200).send({ data: artists });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export {
+  getUser,
+  updateUser,
+  signUp,
+  signUpWithProvider,
+  getCurrentUser,
+  getArtists
+};

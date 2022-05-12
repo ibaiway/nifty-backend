@@ -1,5 +1,14 @@
 import UserModel from '../models/user-model.js';
 
+function matchFilter(isArtist) {
+  let filter = {};
+
+  if (isArtist) {
+    filter.artist = true;
+  }
+  return filter;
+}
+
 async function findById(id) {
   try {
     const user = await UserModel.findById({ _id: id })
@@ -55,4 +64,27 @@ async function update(user) {
   }
 }
 
-export { signUp, findById, update };
+async function getUsers(isArtist = false) {
+  try {
+    const users = await UserModel.aggregate([
+      {
+        $match: matchFilter(isArtist)
+      },
+      {
+        $project: {
+          _id: 1,
+          firstName: 1,
+          profileImage: 1,
+          followers: {
+            $size: '$followedBy'
+          }
+        }
+      }
+    ]);
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { signUp, findById, update, getUsers };
