@@ -19,7 +19,9 @@ async function getPlaylistByUser(uid, includePrivate = false) {
       },
       {
         $project: {
+          _id: 1,
           name: 1,
+          thumbnail: 1,
           tracks: {
             $size: '$tracks'
           }
