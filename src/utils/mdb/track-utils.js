@@ -7,7 +7,7 @@ function fieldsToProject() {
     thumbnail: 1,
     isLiked: 1,
     'artist._id': 1,
-    'artist.firstName': 1,
+    'artist.artisticName': 1,
     'genre._id': 1,
     'genre.name': 1
   };

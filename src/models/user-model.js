@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 30
     },
+    artisticName: {
+      type: String,
+      trim: true
+    },
     following: [{ type: String, ref: 'User' }],
     followedBy: [{ type: String, ref: 'User' }],
     artist: {

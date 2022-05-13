@@ -1,4 +1,3 @@
-import UserModel from '../models/user-model.js';
 import { userService } from '../services/index.js';
 
 async function getCurrentUser(req, res, next) {

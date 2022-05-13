@@ -55,6 +55,7 @@ async function update(user) {
       email: 1,
       firstName: 1,
       lastName: 1,
+      artisticName: 1,
       profileImage: 1,
       artist: 1
     });
@@ -73,7 +74,7 @@ async function getUsers(isArtist = false) {
       {
         $project: {
           _id: 1,
-          firstName: 1,
+          artisticName: 1,
           profileImage: 1,
           followers: {
             $size: '$followedBy'
