@@ -36,7 +36,7 @@ async function updateTrack(req, res, next) {
   const userInfo = { ...req.body };
 
   try {
-    const track = await trackService.updateTrack(uid, userInfo);
+    const track = await trackService.updateTrack(id, userInfo);
 
     if (track) {
       res.status(200).send({

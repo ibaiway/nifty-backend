@@ -202,11 +202,11 @@ async function unlikeTrackById(uid, id) {
   }
 }
 
-async function updateTrack(uid, trackInfo) {
+async function updateTrack(id, trackInfo) {
   try {
     const track = await TrackModel.findOneAndUpdate(
       {
-        _id: uid
+        _id: id
       },
       {
         $set: {
