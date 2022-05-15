@@ -84,7 +84,7 @@ async function getPlaylist(req, res, next) {
     const playlist = await playlistService.getPlaylistById(uid, id);
     if (playlist) {
       res.status(200).send({
-        data: playlist
+        data: playlist[0]
       });
     } else {
       res.status(404).send({

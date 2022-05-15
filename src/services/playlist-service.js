@@ -44,6 +44,9 @@ async function getPlaylistById(uid, id) {
         }
       },
       {
+        $unwind: '$user'
+      },
+      {
         $project: {
           _id: 1,
           name: 1,
