@@ -6,6 +6,14 @@ import {
 } from '../utils/mdb/track-utils.js';
 import { parseToObjectId } from '../utils/mdb/mongo-utils.js';
 
+function matchFilter(trackIds) {
+  let filter = {};
+  if (trackIds) {
+    filter._id = { $in: trackIds };
+  }
+  return filter;
+}
+
 async function createTrack(uid, userInfo) {
   try {
     const track = TrackModel.create({ ...userInfo, userId: uid });
@@ -15,9 +23,13 @@ async function createTrack(uid, userInfo) {
   }
 }
 
-async function getTracksAggregate(uid) {
+async function getTracksAggregate(uid, trackIds) {
   try {
+    const parsedTrackIds = trackIds.map((track) => parseToObjectId(track));
     const tracks = await TrackModel.aggregate([
+      {
+        $match: matchFilter(parsedTrackIds)
+      },
       {
         $addFields: {
           isLiked: {
