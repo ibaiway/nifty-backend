@@ -1,5 +1,6 @@
 import PlaylistModel from '../models/playlist-model.js';
 import { parseToObjectId } from '../utils/mdb/mongo-utils.js';
+import { getTracksAggregate } from './track-service.js';
 
 function matchFilter(uid, includePrivate) {
   let filter = {};
@@ -60,7 +61,15 @@ async function getPlaylistById(uid, id) {
         }
       }
     ]);
-    return playlist;
+    const tracksParsedToString = playlist[0].tracks.map((track) =>
+      track.toString()
+    );
+    const tracks = await getTracksAggregate(uid, tracksParsedToString);
+    const playlistWithTracks = {
+      ...playlist[0],
+      tracks
+    };
+    return playlistWithTracks;
   } catch (error) {
     throw error;
   }
