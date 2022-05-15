@@ -79,11 +79,9 @@ async function updatePlaylist(req, res, next) {
 
 async function getPlaylist(req, res, next) {
   const { id } = req.params;
+  const { uid } = req.user;
   try {
-    const playlist = await PlaylistModel.findById(id)
-      .select('-__v -createdAt -updatedAt')
-      .lean()
-      .exec();
+    const playlist = await playlistService.getPlaylistById(uid, id);
     if (playlist) {
       res.status(200).send({
         data: playlist

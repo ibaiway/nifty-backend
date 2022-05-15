@@ -12,6 +12,57 @@ function matchFilter(uid, includePrivate) {
   return filter;
 }
 
+async function getPlaylistById(uid, id) {
+  try {
+    const parsedId = parseToObjectId(id);
+    const playlist = await PlaylistModel.aggregate([
+      {
+        $match: {
+          _id: parsedId
+        }
+      },
+      {
+        $addFields: {
+          isFollowed: {
+            $cond: {
+              if: { $in: [uid, '$followedBy'] },
+              then: true,
+              else: false
+            }
+          },
+          followedBy: {
+            $size: '$followedBy'
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          thumbnail: 1,
+          'user._id': 1,
+          'user.firstName': 1,
+          isFollowed: 1,
+          followedBy: 1,
+          tracks: 1
+        }
+      }
+    ]);
+    return playlist;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getPlaylistByUser(uid, includePrivate = false) {
   try {
     const playlists = await PlaylistModel.aggregate([
@@ -61,4 +112,9 @@ async function removeTrackFromPlaylist(uid, id, track) {
   }
 }
 
-export { getPlaylistByUser, addTrackToPlaylist, removeTrackFromPlaylist };
+export {
+  getPlaylistById,
+  getPlaylistByUser,
+  addTrackToPlaylist,
+  removeTrackFromPlaylist
+};
