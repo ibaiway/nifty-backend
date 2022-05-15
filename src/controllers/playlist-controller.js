@@ -191,6 +191,38 @@ async function getPlaylistByUser(req, res, next) {
   }
 }
 
+async function addTrackToPlaylist(req, res, next) {
+  const { uid } = req.user;
+  const { id } = req.params;
+  const { track } = req.body;
+  try {
+    const playlist = await playlistService.addTrackToPlaylist(uid, id, track);
+    res.status(200).send({
+      data: playlist
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function removeTrackFromPlaylist(req, res, next) {
+  const { uid } = req.user;
+  const { id } = req.params;
+  const { track } = req.body;
+  try {
+    const playlist = await playlistService.removeTrackFromPlaylist(
+      uid,
+      id,
+      track
+    );
+    res.status(200).send({
+      data: playlist
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   showPlaylists,
   createPlaylist,
@@ -201,5 +233,7 @@ export {
   followPlaylistById,
   unfollowPlaylistById,
   getPlaylistByCurrentUser,
-  getPlaylistByUser
+  getPlaylistByUser,
+  addTrackToPlaylist,
+  removeTrackFromPlaylist
 };

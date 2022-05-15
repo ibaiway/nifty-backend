@@ -26,8 +26,8 @@ const PlaylistSchema = new mongoose.Schema(
     tracks: {
       type: [
         {
-          trackId: { type: mongoose.ObjectId, ref: 'genre' },
-          order: { type: Number }
+          type: mongoose.ObjectId,
+          ref: 'track'
         }
       ],
       default: []

@@ -1,4 +1,5 @@
 import PlaylistModel from '../models/playlist-model.js';
+import { parseToObjectId } from '../utils/mdb/mongo-utils.js';
 
 function matchFilter(uid, includePrivate) {
   let filter = {};
@@ -34,4 +35,30 @@ async function getPlaylistByUser(uid, includePrivate = false) {
   }
 }
 
-export { getPlaylistByUser };
+async function addTrackToPlaylist(uid, id, track) {
+  try {
+    const parsedTrack = parseToObjectId(track);
+    const playlist = await PlaylistModel.findOneAndUpdate(
+      { _id: id, userId: uid },
+      { $addToSet: { tracks: parsedTrack } }
+    );
+    return playlist;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function removeTrackFromPlaylist(uid, id, track) {
+  try {
+    const parsedTrack = parseToObjectId(track);
+    const playlist = await PlaylistModel.findOneAndUpdate(
+      { _id: id, userId: uid },
+      { $pull: { tracks: parsedTrack } }
+    );
+    return playlist;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { getPlaylistByUser, addTrackToPlaylist, removeTrackFromPlaylist };

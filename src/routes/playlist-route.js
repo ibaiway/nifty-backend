@@ -8,7 +8,9 @@ import {
   followPlaylistById,
   unfollowPlaylistById,
   getPlaylistByCurrentUser,
-  getPlaylistByUser
+  getPlaylistByUser,
+  addTrackToPlaylist,
+  removeTrackFromPlaylist
 } from '../controllers/playlist-controller.js';
 import authMiddleware from '../middlewares/auth-middleware.js';
 
@@ -21,6 +23,8 @@ playlistRouter.get('/playlist/byuser/:id', getPlaylistByUser);
 playlistRouter.put('/playlist/:id', updatePlaylist);
 playlistRouter.get('/playlist/:id', getPlaylist);
 playlistRouter.delete('/playlist/:id', deletePlaylist);
+playlistRouter.put('/playlist/:id/add', addTrackToPlaylist);
+playlistRouter.put('/playlist/:id/remove', removeTrackFromPlaylist);
 playlistRouter.put('/playlist/follow/:id', followPlaylistById);
 playlistRouter.put('playlist/unfollow/:id', unfollowPlaylistById);
 
