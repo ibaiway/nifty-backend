@@ -75,20 +75,18 @@ async function getPlaylistById(uid, id) {
   }
 }
 
-async function getPlaylistByUser(uid, includePrivate = false) {
+async function getPlaylists(uid, id, includePrivate = false) {
   try {
     const playlists = await PlaylistModel.aggregate([
       {
-        $match: matchFilter(uid, includePrivate)
+        $match: matchFilter(uid, id, includePrivate)
       },
       {
         $project: {
           _id: 1,
           name: 1,
           thumbnail: 1,
-          tracks: {
-            $size: '$tracks'
-          }
+          tracks: 1
         }
       }
     ]);
@@ -126,7 +124,7 @@ async function removeTrackFromPlaylist(uid, id, track) {
 
 export {
   getPlaylistById,
-  getPlaylistByUser,
+  getPlaylists,
   addTrackToPlaylist,
   removeTrackFromPlaylist
 };
