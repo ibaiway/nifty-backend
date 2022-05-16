@@ -85,11 +85,55 @@ async function getArtists(req, res, next) {
   }
 }
 
+async function followUserById(req, res, next) {
+  {
+    try {
+      const { uid } = req.user;
+      const { id } = req.params;
+      const user = await userService.followUserById(uid, id, true);
+      if (user) {
+        res.status(200).send({
+          data: 'followed'
+        });
+      } else {
+        res.status(404).send({
+          error: 'User not found'
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
+async function unfollowUserById(req, res, next) {
+  {
+    try {
+      const { uid } = req.user;
+      const { id } = req.params;
+      const user = await userService.unfollowUserById(uid, id);
+      if (user) {
+        res.status(200).send({
+          data: 'unfollowed'
+        });
+      } else {
+        res.status(404).send({
+          error: 'User not found'
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
 export {
   getUser,
   updateUser,
   signUp,
   signUpWithProvider,
   getCurrentUser,
-  getArtists
+  getArtists,
+  followUserById,
+  unfollowUserById
 };

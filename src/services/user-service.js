@@ -13,6 +13,16 @@ function matchFilter(filters) {
   return filter;
 }
 
+function follorOrUnfollow(follow, uid) {
+  {
+    if (follow) {
+      return { $addToSet: { followedBy: uid } };
+    } else {
+      return { $pull: { followedBy: uid } };
+    }
+  }
+}
+
 async function findById(id) {
   try {
     const user = await UserModel.findById({ _id: id })
@@ -73,7 +83,7 @@ async function getUsers(isArtist = false) {
   try {
     const users = await UserModel.aggregate([
       {
-        $match: matchFilter(isArtist)
+        $match: matchFilter({ isArtist })
       },
       {
         $project: {
@@ -118,4 +128,52 @@ async function searchUsers(filters) {
   }
 }
 
-export { signUp, findById, update, getUsers, searchUsers };
+async function followUserById(uid, id) {
+  try {
+    const followedUser = UserModel.findOneAndUpdate(
+      { _id: id },
+      { $addToSet: { followedBy: uid } }
+    );
+    const followingUser = UserModel.findOneAndUpdate(
+      { _id: uid },
+      { $addToSet: { following: uid } }
+    );
+    if (followedUser && followingUser) {
+      return followedUser;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function unfollowUserById(uid, id) {
+  try {
+    const followedUser = UserModel.findOneAndUpdate(
+      { _id: id },
+      { $pull: { followedBy: uid } }
+    );
+    const followingUser = UserModel.findOneAndUpdate(
+      { _id: uid },
+      { $pull: { following: uid } }
+    );
+    if (followedUser && followingUser) {
+      return followedUser;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export {
+  signUp,
+  findById,
+  update,
+  getUsers,
+  searchUsers,
+  followUserById,
+  unfollowUserById
+};
