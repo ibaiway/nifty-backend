@@ -167,6 +167,18 @@ async function getCurrentUserTracks(req, res, next) {
   }
 }
 
+async function getTracksByUser(req, res, next) {
+  const { id } = req.params;
+  try {
+    const tracks = await trackService.getTracksByArtist(id);
+    res.status(200).send({
+      data: tracks
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   getTracks,
   createTrack,
@@ -176,5 +188,6 @@ export {
   likeTrackById,
   unlikeTrackById,
   getlikedTracks,
-  getCurrentUserTracks
+  getCurrentUserTracks,
+  getTracksByUser
 };

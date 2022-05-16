@@ -96,7 +96,12 @@ async function searchUsers(filters) {
   try {
     const users = await UserModel.aggregate([
       {
-        $match: matchFilter(filters)
+        $match: {
+          $or: [
+            { artisticName: { $regex: filters.regex, $options: 'i' } },
+            { firstName: { $regex: filters.regex, $options: 'i' } }
+          ]
+        }
       },
       {
         $project: {
