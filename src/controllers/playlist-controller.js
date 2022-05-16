@@ -3,7 +3,7 @@ import { playlistService } from '../services/index.js';
 
 async function showPlaylists(req, res, next) {
   try {
-    const playlists = await playlistService.getPlaylists();
+    const playlists = await playlistService.getPlaylists({});
     res.status(200).send({
       data: playlists
     });
@@ -78,7 +78,7 @@ async function getPlaylist(req, res, next) {
   const { id } = req.params;
   const { uid } = req.user;
   try {
-    const playlist = await playlistService.getPlaylistById(uid, id);
+    const playlist = await playlistService.getPlaylistById({ uid, id });
     if (playlist) {
       res.status(200).send({
         data: playlist
@@ -165,7 +165,10 @@ async function unfollowPlaylistById(req, res, next) {
 async function getPlaylistByCurrentUser(req, res, next) {
   const { uid } = req.user;
   try {
-    const playlists = await playlistService.getPlaylists(uid, null, true);
+    const playlists = await playlistService.getPlaylists({
+      uid,
+      includePrivate: true
+    });
     res.status(200).send({
       data: playlists
     });
@@ -177,7 +180,10 @@ async function getPlaylistByCurrentUser(req, res, next) {
 async function getPlaylistByUser(req, res, next) {
   const { id } = req.params;
   try {
-    const playlists = await playlistService.getPlaylists(id, null, false);
+    const playlists = await playlistService.getPlaylists(
+      id,
+      (includePrivate = false)
+    );
     res.status(200).send({
       data: playlists
     });

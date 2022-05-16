@@ -2,15 +2,21 @@ import PlaylistModel from '../models/playlist-model.js';
 import { parseToObjectId } from '../utils/mdb/mongo-utils.js';
 import { getTracksAggregate } from './track-service.js';
 
-function matchFilter(uid, includePrivate) {
-  let filter = {};
-  if (uid) {
-    filter.userId = uid;
+function matchFilter(filters) {
+  let mongoFilter = { publicAccessible: false };
+  if (filters.uid) {
+    mongoFilter.userId = filters.uid;
   }
-  if (!includePrivate) {
-    filter.publicAccessible = true;
+  if (filters.id) {
+    mongoFilter._id = filters.id;
   }
-  return filter;
+  if (!filters.includePrivate) {
+    mongoFilter.publicAccessible = true;
+  }
+  if (filters.regex) {
+    mongoFilter.name = { $regex: filters.regex, $options: 'i' };
+  }
+  return mongoFilter;
 }
 
 async function getPlaylistById(uid, id) {
@@ -18,9 +24,7 @@ async function getPlaylistById(uid, id) {
     const parsedId = parseToObjectId(id);
     const playlist = await PlaylistModel.aggregate([
       {
-        $match: {
-          _id: parsedId
-        }
+        $match: { _id: parsedId }
       },
       {
         $addFields: {
@@ -75,11 +79,11 @@ async function getPlaylistById(uid, id) {
   }
 }
 
-async function getPlaylists(uid, id, includePrivate = false) {
+async function getPlaylists(filters) {
   try {
     const playlists = await PlaylistModel.aggregate([
       {
-        $match: matchFilter(uid, id, includePrivate)
+        $match: matchFilter(filters)
       },
       {
         $project: {
@@ -122,9 +126,31 @@ async function removeTrackFromPlaylist(uid, id, track) {
   }
 }
 
+async function searchPlaylists(filters) {
+  try {
+    const playlists = await PlaylistModel.aggregate([
+      {
+        $match: matchFilter(filters)
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          thumbnail: 1,
+          tracks: 1
+        }
+      }
+    ]);
+    return playlists;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   getPlaylistById,
   getPlaylists,
   addTrackToPlaylist,
-  removeTrackFromPlaylist
+  removeTrackFromPlaylist,
+  searchPlaylists
 };

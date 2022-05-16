@@ -8,6 +8,7 @@ import trackRouter from './routes/track-routes.js';
 import errorMiddleware from './middlewares/error-middleware.js';
 import genreRouter from './routes/genre-route.js';
 import playlistRouter from './routes/playlist-route.js';
+import searchRouter from './routes/search-routes.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(userRouter);
 app.use(trackRouter);
 app.use(genreRouter);
 app.use(playlistRouter);
+app.use(searchRouter);
 
 app.use(errorMiddleware);
 

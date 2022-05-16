@@ -1,10 +1,14 @@
 import UserModel from '../models/user-model.js';
 
-function matchFilter(isArtist) {
+function matchFilter(filters) {
   let filter = {};
 
-  if (isArtist) {
+  if (filters.isArtist) {
     filter.artist = true;
+  }
+  if (filters.regex) {
+    filter.artisticName = { $regex: filters.regex, $options: 'i' };
+    filter.firstName = { $regex: filters.regex, $options: 'i' };
   }
   return filter;
 }
@@ -88,4 +92,25 @@ async function getUsers(isArtist = false) {
   }
 }
 
-export { signUp, findById, update, getUsers };
+async function searchUsers(filters) {
+  try {
+    const users = await UserModel.aggregate([
+      {
+        $match: matchFilter(filters)
+      },
+      {
+        $project: {
+          _id: 1,
+          artisticName: 1,
+          firstName: 1,
+          profileImage: 1
+        }
+      }
+    ]);
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { signUp, findById, update, getUsers, searchUsers };
