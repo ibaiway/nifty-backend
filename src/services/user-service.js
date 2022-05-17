@@ -13,12 +13,52 @@ function matchFilter(filters) {
   return filter;
 }
 
-async function findById(id) {
+async function findByIdFull(id) {
   try {
     const user = await UserModel.findById({ _id: id })
       .select('-__v -createdAt -updatedAt')
       .lean()
       .exec();
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function findById(uid, id) {
+  try {
+    const user = await UserModel.aggregate([
+      {
+        $match: { uid: id }
+      },
+      {
+        $addFields: {
+          isFollowed: {
+            $cond: {
+              if: { $in: [uid, '$followedBy'] },
+              then: true,
+              else: false
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          artisticName: 1,
+          firstName: 1,
+          lastName: 1,
+          profileImage: 1,
+          followers: {
+            $size: '$followedBy'
+          },
+          following: {
+            $size: '$following'
+          },
+          isFollowed: 1
+        }
+      }
+    ]);
     return user;
   } catch (error) {
     throw error;
@@ -160,6 +200,7 @@ async function unfollowUserById(uid, id) {
 
 export {
   signUp,
+  findByIdFull,
   findById,
   update,
   getUsers,

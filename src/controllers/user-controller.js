@@ -3,7 +3,7 @@ import { userService } from '../services/index.js';
 async function getCurrentUser(req, res, next) {
   const { uid } = req.user;
   try {
-    const user = await userService.findById(uid);
+    const user = await userService.findByIdFull(uid);
     if (user) {
       res.status(200).send({
         data: user
@@ -20,8 +20,9 @@ async function getCurrentUser(req, res, next) {
 
 async function getUser(req, res, next) {
   const { id } = req.params;
+  const { uid } = req.user;
   try {
-    const user = await userService.findById(id);
+    const user = await userService.findById(id, uid);
 
     if (user) {
       res.status(200).send({
