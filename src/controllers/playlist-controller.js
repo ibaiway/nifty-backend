@@ -180,10 +180,10 @@ async function getPlaylistByCurrentUser(req, res, next) {
 async function getPlaylistByUser(req, res, next) {
   const { id } = req.params;
   try {
-    const playlists = await playlistService.getPlaylists(
-      id,
-      (includePrivate = false)
-    );
+    const playlists = await playlistService.getPlaylists({
+      uid: id,
+      includePrivate: false
+    });
     res.status(200).send({
       data: playlists
     });

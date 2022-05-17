@@ -3,15 +3,15 @@ import { parseToObjectId } from '../utils/mdb/mongo-utils.js';
 import { getTracksAggregate } from './track-service.js';
 
 function matchFilter(filters) {
-  let mongoFilter = { publicAccessible: false };
+  let mongoFilter = { publicAccessible: true };
   if (filters.uid) {
     mongoFilter.userId = filters.uid;
   }
   if (filters.id) {
     mongoFilter._id = filters.id;
   }
-  if (!filters.includePrivate) {
-    mongoFilter.publicAccessible = true;
+  if (filters.includePrivate) {
+    delete mongoFilter.publicAccessible;
   }
   if (filters.regex) {
     mongoFilter.name = { $regex: filters.regex, $options: 'i' };
