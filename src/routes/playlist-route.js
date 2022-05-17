@@ -26,6 +26,6 @@ playlistRouter.delete('/playlist/:id', deletePlaylist);
 playlistRouter.put('/playlist/:id/add', addTrackToPlaylist);
 playlistRouter.put('/playlist/:id/remove', removeTrackFromPlaylist);
 playlistRouter.put('/playlist/follow/:id', followPlaylistById);
-playlistRouter.put('playlist/unfollow/:id', unfollowPlaylistById);
+playlistRouter.put('/playlist/unfollow/:id', unfollowPlaylistById);
 
 export default playlistRouter;

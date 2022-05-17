@@ -6,13 +6,18 @@ import {
 } from '../utils/mdb/track-utils.js';
 import { parseToObjectId } from '../utils/mdb/mongo-utils.js';
 
-function matchFilter(trackIds) {
-  let filter = {};
-  if (trackIds) {
-    const parsedTrackIds = trackIds.map((track) => parseToObjectId(track));
-    filter._id = { $in: parsedTrackIds };
+function matchFilter(filters) {
+  let mongoFilter = {};
+  if (filters.trackIds) {
+    const parsedTrackIds = filters.trackIds.map((track) =>
+      parseToObjectId(track)
+    );
+    mongoFilter._id = { $in: parsedTrackIds };
   }
-  return filter;
+  if (filters.regex) {
+    mongoFilter.title = { $regex: filters.regex, $options: 'i' };
+  }
+  return mongoFilter;
 }
 
 async function createTrack(uid, userInfo) {
@@ -28,7 +33,7 @@ async function getTracksAggregate(uid, trackIds) {
   try {
     const tracks = await TrackModel.aggregate([
       {
-        $match: matchFilter(trackIds)
+        $match: matchFilter({ trackIds })
       },
       {
         $addFields: {
@@ -241,6 +246,28 @@ async function deleteTrackById(uid, id) {
   }
 }
 
+async function searchTracks(filters) {
+  try {
+    const tracks = TrackModel.aggregate([
+      {
+        $match: matchFilter(filters)
+      },
+      {
+        $lookup: lookupUser()
+      },
+      {
+        $unwind: '$artist'
+      },
+      {
+        $project: fieldsToProject() //Quitar los campos de genero o incluirlo
+      }
+    ]);
+    return tracks;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   getTracksAggregate,
   getTracksByIdAggregate,
@@ -250,5 +277,6 @@ export {
   unlikeTrackById,
   deleteTrackById,
   createTrack,
-  updateTrack
+  updateTrack,
+  searchTracks
 };

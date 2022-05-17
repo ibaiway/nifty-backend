@@ -9,6 +9,7 @@ import errorMiddleware from './middlewares/error-middleware.js';
 import genreRouter from './routes/genre-route.js';
 import playlistRouter from './routes/playlist-route.js';
 import callStats from './controllers/stats-controller.js';
+import searchRouter from './routes/search-routes.js';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(trackRouter);
 app.use(genreRouter);
 app.use(playlistRouter);
 app.get('/test', callStats);
+app.use(searchRouter);
 
 app.use(errorMiddleware);
 

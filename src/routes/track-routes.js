@@ -8,7 +8,8 @@ import {
   likeTrackById,
   unlikeTrackById,
   getlikedTracks,
-  getCurrentUserTracks
+  getCurrentUserTracks,
+  getTracksByUser
 } from '../controllers/track-controller.js';
 import authMiddleware from '../middlewares/auth-middleware.js';
 
@@ -19,6 +20,7 @@ trackRouter.get('/track', getTracks);
 trackRouter.post('/track', createTrack);
 trackRouter.get('/track/getliked', getlikedTracks);
 trackRouter.get('/track/byartist', getCurrentUserTracks);
+trackRouter.get('/track/byartist/:id', getTracksByUser);
 trackRouter.put('/track/:id', updateTrack);
 trackRouter.get('/track/:id', getTrackById);
 trackRouter.delete('/track/:id', deleteTrackById);
