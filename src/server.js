@@ -13,6 +13,7 @@ import searchRouter from './routes/search-routes.js';
 const app = express();
 
 app.use(morgan('dev'));
+app.disable('x-powered-by');
 app.use(helmet());
 app.use(express.json());
 app.use(

@@ -76,7 +76,7 @@ async function signUpWithProvider(req, res, next) {
   }
 }
 
-async function getArtists(req, res, next) {
+async function getArtists(_req, res, next) {
   try {
     const artists = await userService.getUsers(true);
     res.status(200).send({ data: artists });

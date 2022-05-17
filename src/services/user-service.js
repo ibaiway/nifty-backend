@@ -13,16 +13,6 @@ function matchFilter(filters) {
   return filter;
 }
 
-function follorOrUnfollow(follow, uid) {
-  {
-    if (follow) {
-      return { $addToSet: { followedBy: uid } };
-    } else {
-      return { $pull: { followedBy: uid } };
-    }
-  }
-}
-
 async function findById(id) {
   try {
     const user = await UserModel.findById({ _id: id })

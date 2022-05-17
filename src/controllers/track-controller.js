@@ -83,7 +83,7 @@ async function deleteTrackById(req, res, next) {
       });
     } else {
       res.status(404).send({
-        error: `Track ${id} not found`
+        error: `Track id not found`
       });
     }
   } catch (error) {
@@ -109,7 +109,7 @@ async function likeTrackById(req, res, next) {
   } catch (error) {
     if (error instanceof mongoose.CastError) {
       res.status(400).send({
-        error: `Track id: ${id} format not valid`
+        error: `Track id format not valid`
       });
     } else {
       next(error);
@@ -135,7 +135,7 @@ async function unlikeTrackById(req, res, next) {
   } catch (error) {
     if (error instanceof mongoose.CastError) {
       res.status(400).send({
-        error: `Track id: ${id} format not valid`
+        error: `Track id format not valid`
       });
     } else {
       next(error);

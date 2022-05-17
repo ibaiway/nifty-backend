@@ -1,12 +1,10 @@
-//import * as db from '../index.js';
-//import UserModel from '../user-model.js';
 import db from '../index.js';
 import server from '../../utils/tests/server.js';
 
 describe('mongoose schemas', () => {
-  beforeAll(async () => await server.initTestServer());
-  afterEach(async () => await server.clearUsersCollection());
-  afterAll(async () => await server.stopTestServer());
+  beforeAll(async () => server.initTestServer());
+  afterEach(async () => server.clearUsersCollection());
+  afterAll(async () => server.stopTestServer());
 
   const CORRECT_USER_INFO = {
     _id: 'ThIsIsJuStAtEsT0123456789',
@@ -63,14 +61,6 @@ describe('mongoose schemas', () => {
           /The email is required/
         );
       }
-    });
-
-    test('1.3.3 trims the email', async () => {
-      const user = await db.User.create({
-        ...CORRECT_USER_INFO,
-        email: '  mail@mail.com   '
-      });
-      expect(user.email).toBe('mail@mail.com');
     });
 
     test('1.3.3 trims the email', async () => {

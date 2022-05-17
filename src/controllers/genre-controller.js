@@ -1,7 +1,7 @@
 import GenreModel from '../models/genre-model.js';
 import TrackModel from '../models/track-model.js';
 
-async function getGenres(req, res, next) {
+async function getGenres(_req, res, next) {
   try {
     const genre = await GenreModel.find({})
       .select('-__v -createdAt -updatedAt')
