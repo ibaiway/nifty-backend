@@ -36,6 +36,10 @@ const TrackSchema = new mongoose.Schema(
     likedBy: {
       type: [{ type: String, ref: 'user' }],
       default: []
+    },
+    count: {
+      type: Number,
+      default: 0
     }
   },
   { timestamps: true }

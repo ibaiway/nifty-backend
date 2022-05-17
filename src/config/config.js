@@ -6,7 +6,6 @@ dotenv.config();
 const ENV = process.env.NODE_ENV || 'development';
 
 logger.enableAll();
-
 const CONFIG = {
   production: {
     app: {
@@ -39,6 +38,10 @@ const CONFIG = {
           process.env.FB_CERT_AUTH_PROVIDER_X_509_CERT_URL,
         client_x509_cert_url: process.env.FB_CERT_CLIENT_X_509_CERT_URL
       }
+    },
+    api: {
+      KEY: process.env.STATS_KEY,
+      URL: process.env.STATS_URL || '127.0.0.1:8000'
     }
   },
   development: {
@@ -72,6 +75,10 @@ const CONFIG = {
           process.env.FB_CERT_AUTH_PROVIDER_X_509_CERT_URL,
         client_x509_cert_url: process.env.FB_CERT_CLIENT_X_509_CERT_URL
       }
+    },
+    api: {
+      KEY: process.env.STATS_KEY,
+      URL: process.env.STATS_URL
     }
   },
   test: {
@@ -105,6 +112,10 @@ const CONFIG = {
           process.env.FB_CERT_AUTH_PROVIDER_X_509_CERT_URL,
         client_x509_cert_url: process.env.FB_CERT_CLIENT_X_509_CERT_URL
       }
+    },
+    api: {
+      KEY: process.env.STATS_KEY,
+      URL: process.env.STATS_URL || 'http://127.0.0.1:8000'
     }
   }
 };
