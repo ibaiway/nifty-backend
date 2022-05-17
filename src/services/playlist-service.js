@@ -65,6 +65,7 @@ async function getPlaylistById(uid, id) {
         }
       }
     ]);
+    console.log(playlist);
     const tracksParsedToString = playlist[0].tracks.map((track) =>
       track.toString()
     );

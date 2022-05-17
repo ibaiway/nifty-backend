@@ -78,7 +78,7 @@ async function getPlaylist(req, res, next) {
   const { id } = req.params;
   const { uid } = req.user;
   try {
-    const playlist = await playlistService.getPlaylistById({ uid, id });
+    const playlist = await playlistService.getPlaylistById(uid, id);
     if (playlist) {
       res.status(200).send({
         data: playlist
