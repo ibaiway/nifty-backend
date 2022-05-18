@@ -4,11 +4,12 @@ import { searchUsers } from '../services/user-service.js';
 
 async function searchAll(req, res, next) {
   try {
+    const { uid } = req.user;
     const { text } = req.params;
     const filter = { regex: decodeURIComponent(text) };
     const [playlists, tracks, users] = await Promise.all([
       searchPlaylists(filter),
-      searchTracks(filter),
+      searchTracks(...filter, uid),
       searchUsers(filter)
     ]);
 

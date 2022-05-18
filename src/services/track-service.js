@@ -253,10 +253,27 @@ async function searchTracks(filters) {
         $match: matchFilter(filters)
       },
       {
+        $addFields: {
+          isLiked: {
+            $cond: {
+              if: { $in: [filters.uid, '$likedBy'] },
+              then: true,
+              else: false
+            }
+          }
+        }
+      },
+      {
         $lookup: lookupUser()
       },
       {
         $unwind: '$artist'
+      },
+      {
+        $lookup: lookupGenre()
+      },
+      {
+        $unwind: '$genre'
       },
       {
         $project: fieldsToProject() //Quitar los campos de genero o incluirlo
