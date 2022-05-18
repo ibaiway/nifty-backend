@@ -29,7 +29,7 @@ async function findById(uid, id) {
   try {
     const user = await UserModel.aggregate([
       {
-        $match: { uid: id }
+        $match: { _id: id }
       },
       {
         $addFields: {

@@ -22,7 +22,7 @@ async function getUser(req, res, next) {
   const { id } = req.params;
   const { uid } = req.user;
   try {
-    const user = await userService.findById(id, uid);
+    const user = await userService.findById(uid, id);
 
     if (user) {
       res.status(200).send({
