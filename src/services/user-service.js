@@ -59,7 +59,7 @@ async function findById(uid, id) {
         }
       }
     ]);
-    return user;
+    return user[0];
   } catch (error) {
     throw error;
   }

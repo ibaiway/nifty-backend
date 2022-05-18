@@ -9,7 +9,7 @@ async function searchAll(req, res, next) {
     const filter = { regex: decodeURIComponent(text) };
     const [playlists, tracks, users] = await Promise.all([
       searchPlaylists(filter),
-      searchTracks(...filter, uid),
+      searchTracks({ ...filter, uid }),
       searchUsers(filter)
     ]);
 
