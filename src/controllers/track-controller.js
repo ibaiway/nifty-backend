@@ -5,7 +5,7 @@ async function getTracks(req, res, next) {
   const { uid } = req.user;
   const { trackIds } = req.body;
   try {
-    const tracks = await trackService.getTracksAggregate(uid, trackIds);
+    const tracks = await trackService.getTracksAggregate({ uid, trackIds });
     res.status(200).send({
       data: tracks
     });

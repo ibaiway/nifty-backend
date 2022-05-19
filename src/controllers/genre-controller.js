@@ -1,5 +1,6 @@
 import GenreModel from '../models/genre-model.js';
 import TrackModel from '../models/track-model.js';
+import { trackService } from '../services/index.js';
 
 async function getGenres(_req, res, next) {
   try {
@@ -17,8 +18,9 @@ async function getGenres(_req, res, next) {
 
 async function getTrackByGenre(req, res, next) {
   const { id } = req.params;
+  const { uid } = req.users;
   try {
-    const TrackWithGenre = await TrackModel.find({ genre: id });
+    const TrackWithGenre = await trackService.find({ genre: id, uid: uid });
     if (TrackWithGenre) {
       res.status(200).send({
         data: TrackWithGenre

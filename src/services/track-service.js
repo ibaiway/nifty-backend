@@ -17,6 +17,9 @@ function matchFilter(filters) {
   if (filters.regex) {
     mongoFilter.title = { $regex: filters.regex, $options: 'i' };
   }
+  if (filters.genre) {
+    mongoFilter.genre = { genre: filters.genre };
+  }
   return mongoFilter;
 }
 
@@ -29,17 +32,17 @@ async function createTrack(uid, userInfo) {
   }
 }
 
-async function getTracksAggregate(uid, trackIds) {
+async function getTracksAggregate(filters) {
   try {
     const tracks = await TrackModel.aggregate([
       {
-        $match: matchFilter({ trackIds })
+        $match: matchFilter({ ...filters })
       },
       {
         $addFields: {
           isLiked: {
             $cond: {
-              if: { $in: [uid, '$likedBy'] },
+              if: { $in: [filters.uid, '$likedBy'] },
               then: true,
               else: false
             }
