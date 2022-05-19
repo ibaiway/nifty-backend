@@ -11,7 +11,8 @@ import {
   getPlaylistByUser,
   addTrackToPlaylist,
   removeTrackFromPlaylist,
-  getUsersFollowingPlaylist
+  getUsersFollowingPlaylist,
+  getPopularPlaylists
 } from '../controllers/playlist-controller.js';
 import authMiddleware from '../middlewares/auth-middleware.js';
 
@@ -19,6 +20,7 @@ const playlistRouter = Router();
 playlistRouter.use('/playlist', authMiddleware);
 playlistRouter.get('/playlist', showPlaylists);
 playlistRouter.post('/playlist', createPlaylist);
+playlistRouter.post('/playlist/popular', getPopularPlaylists);
 playlistRouter.get('/playlist/followed', getUsersFollowingPlaylist);
 playlistRouter.get('/playlist/byuser', getPlaylistByCurrentUser);
 playlistRouter.get('/playlist/byuser/:id', getPlaylistByUser);

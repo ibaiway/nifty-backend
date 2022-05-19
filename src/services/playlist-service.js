@@ -148,10 +148,65 @@ async function searchPlaylists(filters) {
   }
 }
 
+async function getPLaylistByFollowers(uid) {
+  try {
+    const playlists = await PlaylistModel.aggregate([
+      {
+        $sort: {
+          $size: followedBy
+        }
+      },
+      { $limit: 10 },
+      {
+        $addFields: {
+          isFollowed: {
+            $cond: {
+              if: { $in: [uid, '$followedBy'] },
+              then: true,
+              else: false
+            }
+          },
+          followedBy: {
+            $size: '$followedBy'
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $unwind: '$user'
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          thumbnail: 1,
+          'user._id': 1,
+          'user.firstName': 1,
+          isFollowed: 1,
+          followedBy: 1,
+          tracks: 1
+        }
+      }
+    ]);
+    return playlists;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   getPlaylistById,
   getPlaylists,
   addTrackToPlaylist,
   removeTrackFromPlaylist,
-  searchPlaylists
+  searchPlaylists,
+  getPLaylistByFollowers
 };

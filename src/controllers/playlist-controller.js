@@ -237,6 +237,19 @@ async function getUsersFollowingPlaylist(req, res, next) {
   }
 }
 
+async function getPopularPlaylists(req, res, next) {
+  const { uid } = req.user;
+  try {
+    const popularPlaylists = await playlistService.getPLaylistByFollowers(uid);
+    res.status(200).send({
+      data: popularPlaylists
+    });
+    return;
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   showPlaylists,
   createPlaylist,
@@ -249,5 +262,6 @@ export {
   getPlaylistByUser,
   addTrackToPlaylist,
   removeTrackFromPlaylist,
-  getUsersFollowingPlaylist
+  getUsersFollowingPlaylist,
+  getPopularPlaylists
 };
