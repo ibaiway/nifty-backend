@@ -18,9 +18,12 @@ async function getGenres(_req, res, next) {
 
 async function getTrackByGenre(req, res, next) {
   const { id } = req.params;
-  const { uid } = req.users;
+  const { uid } = req.user;
   try {
-    const TrackWithGenre = await trackService.find({ genre: id, uid: uid });
+    const TrackWithGenre = await trackService.getTracksAggregate({
+      genre: id,
+      uid: uid
+    });
     if (TrackWithGenre) {
       res.status(200).send({
         data: TrackWithGenre
