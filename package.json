@@ -11,7 +11,8 @@
     "dev": "nodemon src/index.js",
     "test": "jest --config jest.config.js --watchAll",
     "coverage": "npm run test -- --coverage",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "heroku-postbuild": "npm install --only=dev && npm run build"
   },
   "repository": {
     "type": "git",
