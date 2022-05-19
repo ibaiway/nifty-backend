@@ -18,7 +18,7 @@ function matchFilter(filters) {
     mongoFilter.title = { $regex: filters.regex, $options: 'i' };
   }
   if (filters.genre) {
-    mongoFilter.genre = { genre: parseToObjectId(filters.genre) };
+    mongoFilter.genre = parseToObjectId(filters.genre);
   }
   return mongoFilter;
 }
