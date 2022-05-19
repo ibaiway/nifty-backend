@@ -158,7 +158,7 @@ async function getlikedTracks(req, res, next) {
 async function getCurrentUserTracks(req, res, next) {
   const { uid } = req.user;
   try {
-    const tracks = await trackService.getTracksByArtist(uid);
+    const tracks = await trackService.getTracksByArtist({ id: uid, uid: uid });
     res.status(200).send({
       data: tracks
     });
@@ -169,8 +169,9 @@ async function getCurrentUserTracks(req, res, next) {
 
 async function getTracksByUser(req, res, next) {
   const { id } = req.params;
+  const { uid } = req.user;
   try {
-    const tracks = await trackService.getTracksByArtist(id);
+    const tracks = await trackService.getTracksByArtist({ id: id, uid: uid });
     res.status(200).send({
       data: tracks
     });

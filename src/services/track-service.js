@@ -113,17 +113,17 @@ async function getTracksByIdAggregate(uid, id) {
   }
 }
 
-async function getTracksByArtist(uid) {
+async function getTracksByArtist(filters) {
   try {
     const track = await TrackModel.aggregate([
       {
-        $match: { userId: uid }
+        $match: { userId: filters.id }
       },
       {
         $addFields: {
           isLiked: {
             $cond: {
-              if: { $in: [uid, '$likedBy'] },
+              if: { $in: [filters.uid, '$likedBy'] },
               then: true,
               else: false
             }
