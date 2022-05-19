@@ -48,17 +48,13 @@ describe('User Service Tests', () => {
 
   describe('Finding user by id', () => {
     test('Should find a user', async () => {
-      UserModel.findById = jest.fn().mockImplementation(() => ({
-        select: jest.fn().mockImplementation(() => ({
-          lean: jest.fn().mockImplementation(() => ({
-            exec: jest.fn().mockImplementation(() => {
-              return { ...CORRECT_USER_INFO };
-            })
-          }))
-        }))
-      }));
-
-      const user = await UserService.findById(CORRECT_USER_INFO._id);
+      UserModel.aggregate = jest.fn().mockImplementation(() => {
+        return [{ ...CORRECT_USER_INFO }];
+      });
+      const user = await UserService.findById(
+        'someOtherUid',
+        CORRECT_USER_INFO._id
+      );
       await expect(user).toEqual({ ...CORRECT_USER_INFO });
     });
   });

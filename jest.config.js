@@ -15,5 +15,5 @@ export default {
   },
 
   testRegex: '((\\.|/*.)(test))\\.js?$',
-  testTimeout: 600000
+  testTimeout: 6000
 };
