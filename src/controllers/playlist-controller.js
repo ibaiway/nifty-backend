@@ -222,6 +222,21 @@ async function removeTrackFromPlaylist(req, res, next) {
   }
 }
 
+async function getUsersFollowingPlaylist(req, res, next) {
+  const { uid } = req.user;
+  try {
+    const followedPlaylists = await PlaylistModel.find({
+      followedBy: uid
+    }).select('name _id  tracks thumbnail');
+    res.status(200).send({
+      data: followedPlaylists
+    });
+    return;
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   showPlaylists,
   createPlaylist,
@@ -233,5 +248,6 @@ export {
   getPlaylistByCurrentUser,
   getPlaylistByUser,
   addTrackToPlaylist,
-  removeTrackFromPlaylist
+  removeTrackFromPlaylist,
+  getUsersFollowingPlaylist
 };
