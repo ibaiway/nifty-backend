@@ -198,6 +198,46 @@ async function unfollowUserById(uid, id) {
   }
 }
 
+async function getArtistsOrderedByFollowers(uid) {
+  try {
+    const users = await UserModel.aggregate([
+      {
+        $match: { artist: true }
+      },
+      {
+        $sort: { $size: followedBy }
+      },
+      {
+        $limit: 10
+      },
+      {
+        $addFields: {
+          isFollowed: {
+            $cond: {
+              if: { $in: [uid, '$followedBy'] },
+              then: true,
+              else: false
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          artisticName: 1,
+          firstName: 1,
+          lastName: 1,
+          profileImage: 1,
+          isFollowed: 1
+        }
+      }
+    ]);
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   signUp,
   findByIdFull,
@@ -206,5 +246,6 @@ export {
   getUsers,
   searchUsers,
   followUserById,
-  unfollowUserById
+  unfollowUserById,
+  getArtistsOrderedByFollowers
 };
