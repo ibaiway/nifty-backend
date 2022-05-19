@@ -69,7 +69,10 @@ async function getPlaylistById(uid, id) {
     const tracksParsedToString = playlist[0].tracks.map((track) =>
       track.toString()
     );
-    const tracks = await getTracksAggregate(uid, tracksParsedToString);
+    const tracks = await getTracksAggregate({
+      uid,
+      trackIds: tracksParsedToString
+    });
     const playlistWithTracks = {
       ...playlist[0],
       tracks
