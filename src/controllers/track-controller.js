@@ -179,6 +179,18 @@ async function getTracksByUser(req, res, next) {
   }
 }
 
+async function getPopularTracks(req, res, next) {
+  const { uid } = req.user;
+  try {
+    const tracks = await trackService.getTracksOrderedByCount(uid);
+    res.status(200).send({
+      data: tracks
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
   getTracks,
   createTrack,
@@ -189,5 +201,6 @@ export {
   unlikeTrackById,
   getlikedTracks,
   getCurrentUserTracks,
-  getTracksByUser
+  getTracksByUser,
+  getPopularTracks
 };

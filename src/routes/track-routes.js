@@ -9,7 +9,8 @@ import {
   unlikeTrackById,
   getlikedTracks,
   getCurrentUserTracks,
-  getTracksByUser
+  getTracksByUser,
+  getPopularTracks
 } from '../controllers/track-controller.js';
 import authMiddleware from '../middlewares/auth-middleware.js';
 
@@ -18,6 +19,7 @@ const trackRouter = Router();
 trackRouter.use('/track', authMiddleware);
 trackRouter.get('/track', getTracks);
 trackRouter.post('/track', createTrack);
+trackRouter.get('/track/popular', getPopularTracks);
 trackRouter.get('/track/getliked', getlikedTracks);
 trackRouter.get('/track/byartist', getCurrentUserTracks);
 trackRouter.get('/track/byartist/:id', getTracksByUser);

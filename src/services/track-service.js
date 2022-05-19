@@ -285,6 +285,44 @@ async function searchTracks(filters) {
   }
 }
 
+async function getTracksOrderedByCount(uid) {
+  try {
+    const tracks = TrackModel.aggregate([
+      { $sort: { count: -1 } },
+      { $limit: 10 },
+      {
+        $addFields: {
+          isLiked: {
+            $cond: {
+              if: { $in: [uid, '$likedBy'] },
+              then: true,
+              else: false
+            }
+          }
+        }
+      },
+      {
+        $lookup: lookupUser()
+      },
+      {
+        $unwind: '$artist'
+      },
+      {
+        $lookup: lookupGenre()
+      },
+      {
+        $unwind: '$genre'
+      },
+      {
+        $project: fieldsToProject() //Quitar los campos de genero o incluirlo
+      }
+    ]);
+    return tracks;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   getTracksAggregate,
   getTracksByIdAggregate,
@@ -295,5 +333,6 @@ export {
   deleteTrackById,
   createTrack,
   updateTrack,
-  searchTracks
+  searchTracks,
+  getTracksOrderedByCount
 };
