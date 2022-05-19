@@ -204,12 +204,7 @@ async function getArtistsOrderedByFollowers(uid) {
       {
         $match: { artist: true }
       },
-      {
-        $sort: { $size: followedBy }
-      },
-      {
-        $limit: 10
-      },
+
       {
         $addFields: {
           isFollowed: {
@@ -228,8 +223,17 @@ async function getArtistsOrderedByFollowers(uid) {
           firstName: 1,
           lastName: 1,
           profileImage: 1,
-          isFollowed: 1
+          isFollowed: 1,
+          followedBy: {
+            $size: '$followedBy'
+          }
         }
+      },
+      {
+        $sort: { followedBy: -1 }
+      },
+      {
+        $limit: 10
       }
     ]);
     return users;

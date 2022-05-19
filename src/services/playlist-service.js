@@ -152,12 +152,6 @@ async function getPLaylistByFollowers(uid) {
   try {
     const playlists = await PlaylistModel.aggregate([
       {
-        $sort: {
-          $size: followedBy
-        }
-      },
-      { $limit: 10 },
-      {
         $addFields: {
           isFollowed: {
             $cond: {
@@ -194,7 +188,13 @@ async function getPLaylistByFollowers(uid) {
           followedBy: 1,
           tracks: 1
         }
-      }
+      },
+      {
+        $sort: {
+          followedBy: -1
+        }
+      },
+      { $limit: 10 }
     ]);
     return playlists;
   } catch (error) {

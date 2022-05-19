@@ -130,7 +130,7 @@ async function unfollowUserById(req, res, next) {
 
 async function getPopularArtists(req, res, next) {
   try {
-    const { uid } = req.users;
+    const { uid } = req.user;
     const artists = await userService.getArtistsOrderedByFollowers(uid);
     res.status(200).send({ data: artists });
   } catch (error) {
