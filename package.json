@@ -8,11 +8,12 @@
     "node": "16.13.1"
   },
   "scripts": {
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest --config jest.config.js --watchAll",
     "coverage": "npm run test -- --coverage",
     "precommit": "lint-staged",
-    "heroku-postbuild": "npm install && npm run build"
+    "heroku-postbuild": "npm install && npm run build && npm run start"
   },
   "repository": {
     "type": "git",
