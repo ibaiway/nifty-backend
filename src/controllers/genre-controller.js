@@ -1,5 +1,4 @@
 import GenreModel from '../models/genre-model.js';
-import TrackModel from '../models/track-model.js';
 import { trackService } from '../services/index.js';
 
 async function getGenres(_req, res, next) {
@@ -49,4 +48,4 @@ async function getGenreById(req, res, next) {
   }
 }
 
-export { getGenres, getTrackByGenre };
+export { getGenres, getTrackByGenre, getGenreById };
