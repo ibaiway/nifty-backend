@@ -1,5 +1,4 @@
 import GenreModel from '../models/genre-model.js';
-import TrackModel from '../models/track-model.js';
 import { trackService } from '../services/index.js';
 
 async function getGenres(_req, res, next) {
@@ -34,4 +33,19 @@ async function getTrackByGenre(req, res, next) {
   }
 }
 
-export { getGenres, getTrackByGenre };
+async function getGenreById(req, res, next) {
+  const { id } = req.body;
+  try {
+    const genre = await GenreModel.findOneById(id)
+      .select('-__v -createdAt -updatedAt')
+      .lean()
+      .exec();
+    res.status(200).send({
+      data: genre
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export { getGenres, getTrackByGenre, getGenreById };
